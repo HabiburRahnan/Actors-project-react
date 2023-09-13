@@ -5,6 +5,8 @@ import Cart from "../Cart/Cart";
 const Home = () => {
   const [allActors, setAllActors] = useState([]);
   const [selectActors, setSelectActors] = useState([]);
+  const [remaining, setRemaining] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
   useEffect(() => {
     fetch(`./Card.json`)
       .then((res) => res.json())
@@ -12,7 +14,27 @@ const Home = () => {
   }, []);
 
   const handleSelectActor = (actor) => {
-    setSelectActors([...selectActors, actor]);
+    const isExist = selectActors.find((item) => item.id === actor.id);
+
+    let count = actor.salary;
+    if (isExist) {
+      return alert("already book");
+    } else {
+      selectActors.forEach((item) => {
+        count += item.salary;
+      });
+      // console.log(count);
+
+      const totalRemaining = 300000 - count;
+      // console.log(totalRemaining);
+      if (count > 300000) {
+        return alert("taka ses e hbe na");
+      } else {
+        setTotalCost(count);
+        setRemaining(totalRemaining);
+        setSelectActors([...selectActors, actor]);
+      }
+    }
     // console.log(actor);
   };
   // console.log(allActors);
@@ -20,7 +42,7 @@ const Home = () => {
     // container
     <div>
       {/* home  container */}
-      <div className="flex">
+      <div className="flex justify-around">
         {/* card container */}
         <div className="w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {allActors.map((actor) => (
@@ -57,8 +79,11 @@ const Home = () => {
         </div>
 
         {/* cart section  */}
-        <div>
-          <Cart selectActors={selectActors}></Cart>
+        <div className="">
+          <Cart
+            totalCost={totalCost}
+            remaining={remaining}
+            selectActors={selectActors}></Cart>
         </div>
       </div>
     </div>
