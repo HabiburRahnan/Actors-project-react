@@ -4,12 +4,18 @@ import Cart from "../Cart/Cart";
 
 const Home = () => {
   const [allActors, setAllActors] = useState([]);
+  const [selectActors, setSelectActors] = useState([]);
   useEffect(() => {
     fetch(`./Card.json`)
       .then((res) => res.json())
       .then((data) => setAllActors(data));
   }, []);
-  console.log(allActors);
+
+  const handleSelectActor = (actor) => {
+    setSelectActors([...selectActors, actor]);
+    // console.log(actor);
+  };
+  // console.log(allActors);
   return (
     // container
     <div>
@@ -20,7 +26,7 @@ const Home = () => {
           {allActors.map((actor) => (
             <div
               key={actor.id}
-              className="w-64 h-80 border-2 border-stone-300 bg-orange-500">
+              className="w-72 h-80 border-2 border-stone-300 bg-orange-500">
               <div className=" ">
                 <img
                   className="w-36 h-20 rounded mt-2 ml-12 "
@@ -28,25 +34,31 @@ const Home = () => {
                   alt=""
                 />
               </div>
-              <h2 className="text-2xl font-bold">{actor.country}</h2>
-              <p className="text-xl font-semibold">
-                <small>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Recusandae, voluptatum.
-                </small>
-              </p>
-              <div className="flex justify-evenly text-xl font-semibold ">
-                <p>Salary: {actor.salary}</p>
-                <p>{actor.role}</p>
+              <div className=" text-center">
+                <h2 className="text-2xl font-bold">{actor.country}</h2>
+                <p className="text-xl font-semibold">
+                  <small>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Recusandae, voluptatum.
+                  </small>
+                </p>
+                <div className="flex justify-evenly font-bold ">
+                  <p>Salary: ${actor.salary}</p>
+                  <p>{actor.role}</p>
+                </div>
+                <button
+                  onClick={() => handleSelectActor(actor)}
+                  className="btn btn-info mt-4">
+                  select
+                </button>
               </div>
-              <button className="btn btn-info ml-20">select</button>
             </div>
           ))}
         </div>
 
         {/* cart section  */}
         <div>
-          <h2 className="text-4xl">This is cart</h2>
+          <Cart selectActors={selectActors}></Cart>
         </div>
       </div>
     </div>
